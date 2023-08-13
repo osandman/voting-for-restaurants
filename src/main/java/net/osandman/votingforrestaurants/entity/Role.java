@@ -1,6 +1,9 @@
 package net.osandman.votingforrestaurants.entity;
 
-public enum Role {
-    ADMIN,
-    REGULAR
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "role")
+public class Role extends AbstractNamedEntity {
 }
