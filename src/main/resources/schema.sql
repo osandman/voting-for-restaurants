@@ -50,9 +50,9 @@ CREATE INDEX restaurant_name_idx ON restaurant (name);
 CREATE TABLE dish
 (
     id          INT DEFAULT nextval('global_seq') PRIMARY KEY,
-    description VARCHAR(100) NOT NULL
+    name VARCHAR(100) NOT NULL
 );
-CREATE UNIQUE INDEX dish_unique_descr_idx ON dish (description);
+CREATE UNIQUE INDEX dish_unique_name_idx ON dish (name);
 
 CREATE TABLE menu
 (
