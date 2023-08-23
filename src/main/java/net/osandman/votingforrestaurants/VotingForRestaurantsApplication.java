@@ -2,6 +2,7 @@ package net.osandman.votingforrestaurants;
 
 import lombok.AllArgsConstructor;
 import net.osandman.votingforrestaurants.entity.Menu;
+import net.osandman.votingforrestaurants.entity.Person;
 import net.osandman.votingforrestaurants.repository.MenuRepository;
 import net.osandman.votingforrestaurants.repository.PersonRepository;
 import net.osandman.votingforrestaurants.repository.RestaurantRepository;
@@ -29,9 +30,11 @@ public class VotingForRestaurantsApplication implements ApplicationRunner {
 
         System.out.println(restaurantRepository.findRestaurantWithMenu(100005));
 
-        Menu menu = menuRepository.findMenuByIdWithMenuItems(100008);
+        Menu menu = menuRepository.findMenuByIdWithMenuItems(100008).get();
         System.out.println(menu);
         menu.getMenuItems().forEach(System.out::println);
 
+        Person admin = personRepository.findPersonByEmailIgnoreCase("admin@ya.ru").get();
+        System.out.printf("name=%s, roles=%s", admin.getName(), admin.getRoles());
     }
 }

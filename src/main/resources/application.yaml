@@ -30,8 +30,11 @@ spring:
     password:
   h2.console.enabled: true
 
-logging:
-  level:
-    net.osandman.votingforrestaurants: debug
-    org.springframework.security.web.FilterChainProxy: debug
-    root: warn
+  data.rest:
+    base-path: /api
+    return-body-on-create: true
+
+logging.level:
+  root: warn
+  net.osandman.votingforrestaurants: debug
+  org.springframework.security.web.FilterChainProxy: debug

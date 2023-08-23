@@ -5,8 +5,10 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.Getter;
+import lombok.ToString;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -14,7 +16,8 @@ import java.util.Set;
 @Entity
 @Table(name = "person")
 @ToString(callSuper = true, exclude = {"password"})
-public class Person extends AbstractNamedEntity {
+@Getter
+public class Person extends AbstractNamedEntity implements Serializable {
 
     @Column(name = "email", nullable = false, unique = true)
     @Email
@@ -35,7 +38,7 @@ public class Person extends AbstractNamedEntity {
     @NotNull
     private boolean enabled;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "person_role",
             joinColumns = @JoinColumn(name = "person_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))

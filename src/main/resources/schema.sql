@@ -25,8 +25,8 @@ CREATE UNIQUE INDEX person_unique_email_idx ON person (email);
 CREATE TABLE role
 (
     id   INT DEFAULT nextval('global_seq') PRIMARY KEY,
-    role_type VARCHAR(20) NOT NULL,
-    CONSTRAINT role_name_idx UNIQUE (role_type)
+    type VARCHAR(20) NOT NULL,
+    CONSTRAINT role_name_idx UNIQUE (type)
 );
 
 CREATE TABLE person_role
