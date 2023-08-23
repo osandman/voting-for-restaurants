@@ -3,9 +3,9 @@ VALUES ('Игорь Воробьев', 'admin@ya.ru', 'igor123'),         -- 100
        ('Виктория Санникова', 'vika@google.com', 'vika123'), -- 100001
        ('Михаил Гусев', 'misha@yahoo.com', 'misha123'); -- 100002
 
-INSERT INTO role (name)
-VALUES ('admin'), -- 100003
-       ('regular'); -- 100004
+INSERT INTO role (role_type)
+VALUES ('ADMIN'), -- 100003
+       ('REGULAR'); -- 100004
 
 INSERT INTO person_role (person_id, role_id)
 VALUES (100000, 100003),

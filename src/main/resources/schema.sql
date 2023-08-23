@@ -24,9 +24,9 @@ CREATE UNIQUE INDEX person_unique_email_idx ON person (email);
 
 CREATE TABLE role
 (
-    id        INT DEFAULT nextval('global_seq') PRIMARY KEY,
-    name VARCHAR(20) NOT NULL,
-    CONSTRAINT role_name_idx UNIQUE (name)
+    id   INT DEFAULT nextval('global_seq') PRIMARY KEY,
+    role_type VARCHAR(20) NOT NULL,
+    CONSTRAINT role_name_idx UNIQUE (role_type)
 );
 
 CREATE TABLE person_role
@@ -49,7 +49,7 @@ CREATE INDEX restaurant_name_idx ON restaurant (name);
 
 CREATE TABLE dish
 (
-    id          INT DEFAULT nextval('global_seq') PRIMARY KEY,
+    id   INT DEFAULT nextval('global_seq') PRIMARY KEY,
     name VARCHAR(100) NOT NULL
 );
 CREATE UNIQUE INDEX dish_unique_name_idx ON dish (name);

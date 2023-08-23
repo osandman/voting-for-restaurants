@@ -12,7 +12,7 @@ spring:
         default_batch_fetch_size: 20
         # https://stackoverflow.com/questions/21257819/what-is-the-difference-between-hibernate-jdbc-fetch-size-and-hibernate-jdbc-batc
         jdbc.batch_size: 20
-    defer-datasource-initialization: true
+    defer-datasource-initialization: false
   #---------------------
   datasource:
     # ImMemory
@@ -29,3 +29,9 @@ spring:
     username: sa
     password:
   h2.console.enabled: true
+
+logging:
+  level:
+    net.osandman.votingforrestaurants: debug
+    org.springframework.security.web.FilterChainProxy: debug
+    root: warn
