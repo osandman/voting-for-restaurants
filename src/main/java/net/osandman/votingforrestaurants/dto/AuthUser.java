@@ -16,7 +16,7 @@ public class AuthUser extends User {
     private final Person person;
 
     public AuthUser(@NotNull Person person) {
-        super(person.getEmail(), person.getPassword(),
+        super(person.getEmail(), person.getPassword(), // person.getRoles());
                 person.getRoles().stream().map(Role::getType).toList());
         this.person = person;
     }

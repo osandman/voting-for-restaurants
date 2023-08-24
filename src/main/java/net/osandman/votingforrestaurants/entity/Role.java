@@ -4,12 +4,12 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
 @Table(name = "role")
 @Getter
-public class Role extends AbstractPersistable<Integer> {
+public class Role extends AbstractBaseEntity {
+
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
     @NotBlank

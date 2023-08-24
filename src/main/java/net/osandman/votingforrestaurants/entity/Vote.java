@@ -3,7 +3,6 @@ package net.osandman.votingforrestaurants.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import java.time.LocalDate;
 
@@ -11,7 +10,7 @@ import java.time.LocalDate;
 @Table(name = "vote")
 @Getter
 @Setter
-public class Vote extends AbstractPersistable<Integer> {
+public class Vote extends AbstractBaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "menu_id")

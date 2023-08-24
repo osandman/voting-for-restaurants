@@ -4,13 +4,12 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
 @Table(name = "menu_item")
 @Getter
 @Setter
-public class MenuItem extends AbstractPersistable<Integer> {
+public class MenuItem extends AbstractBaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "menu_id")

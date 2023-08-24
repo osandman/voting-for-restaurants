@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,7 +14,7 @@ import java.util.List;
 @Table(name = "menu")
 @Getter
 @Setter
-public class Menu extends AbstractPersistable<Integer> {
+public class Menu extends AbstractBaseEntity {
 
     @Column(name = "date")
     @NotNull
