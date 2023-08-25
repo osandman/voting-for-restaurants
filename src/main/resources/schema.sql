@@ -14,9 +14,9 @@ CREATE SEQUENCE global_seq START WITH 100000;
 CREATE TABLE person
 (
     id         INT       DEFAULT nextval('global_seq') PRIMARY KEY,
-    name       VARCHAR(50)             NOT NULL,
-    email      VARCHAR(80)             NOT NULL,
-    password   VARCHAR(50)             NOT NULL,
+    name       VARCHAR(100)            NOT NULL,
+    email      VARCHAR(100)            NOT NULL,
+    password   VARCHAR(100)            NOT NULL,
     registered TIMESTAMP DEFAULT now() NOT NULL,
     enabled    BOOLEAN   DEFAULT TRUE  NOT NULL
 );
@@ -41,7 +41,7 @@ CREATE TABLE person_role
 CREATE TABLE restaurant
 (
     id      INT DEFAULT nextval('global_seq') PRIMARY KEY,
-    name    VARCHAR(50)  NOT NULL,
+    name    VARCHAR(100) NOT NULL,
     address VARCHAR(100) NOT NULL,
     CONSTRAINT name_address UNIQUE (name, address)
 );
@@ -49,8 +49,9 @@ CREATE INDEX restaurant_name_idx ON restaurant (name);
 
 CREATE TABLE dish
 (
-    id   INT DEFAULT nextval('global_seq') PRIMARY KEY,
-    name VARCHAR(100) NOT NULL
+    id          INT DEFAULT nextval('global_seq') PRIMARY KEY,
+    name        VARCHAR(100) NOT NULL,
+    description VARCHAR(500) NOT NULL
 );
 CREATE UNIQUE INDEX dish_unique_name_idx ON dish (name);
 

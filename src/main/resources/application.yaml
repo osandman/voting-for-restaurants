@@ -28,7 +28,8 @@ spring:
     #    tcp: jdbc:h2:tcp://localhost:9092/~/voting
     username: sa
     password:
-  h2.console.enabled: true
+    #https://marco.dev/spring-boot-h2-error
+  h2.console.enabled: false
 
   data.rest:
     base-path: /api
