@@ -31,11 +31,11 @@ spring:
     #https://marco.dev/spring-boot-h2-error
   h2.console.enabled: false
 
-  data.rest:
-    base-path: /api
-    return-body-on-create: true
-
 logging.level:
   root: warn
   net.osandman.votingforrestaurants: debug
   org.springframework.security.web.FilterChainProxy: debug
+
+server:
+  servlet:
+    context-path: /api

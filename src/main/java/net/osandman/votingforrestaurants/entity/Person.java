@@ -16,7 +16,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "person")
-@ToString(callSuper = true, exclude = {"password"})
+@ToString(callSuper = true, exclude = {"password", "votes"})
 @Getter
 public class Person extends AbstractNamedEntity implements Serializable {
 

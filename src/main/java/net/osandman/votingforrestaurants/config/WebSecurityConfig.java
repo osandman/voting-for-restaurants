@@ -51,9 +51,10 @@ public class WebSecurityConfig {
         return httpSecurity
                 .authorizeHttpRequests(
                         authorize -> authorize
+                                .requestMatchers("/api/admin/**").hasRole(ADMIN.name())
                                 .requestMatchers("/api/account").hasRole(REGULAR.name())
-                                .requestMatchers("/api/**").hasRole(ADMIN.name())
-                                .anyRequest().authenticated()
+                                .requestMatchers("/api/profile").authenticated()
+                                .anyRequest().permitAll()
                 )
                 .httpBasic(withDefaults())
                 .sessionManagement(session ->

@@ -12,8 +12,6 @@ import lombok.*;
 @Access(AccessType.FIELD)
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class AbstractNamedEntity extends AbstractBaseEntity {
 
     @Column(name = "name", nullable = false)
