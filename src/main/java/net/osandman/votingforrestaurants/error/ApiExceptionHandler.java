@@ -1,10 +1,12 @@
 package net.osandman.votingforrestaurants.error;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,29 +14,47 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.NoSuchElementException;
 
-import static net.osandman.votingforrestaurants.error.ErrorType.DATA_NOT_FOUND;
+import static net.osandman.votingforrestaurants.error.ErrorType.*;
 
 @RestControllerAdvice(annotations = RestController.class)
 @Slf4j
 public class ApiExceptionHandler {
-    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    @ResponseStatus(HttpStatus.NOT_FOUND) // 404
     @ExceptionHandler(NoSuchElementException.class)
     public ErrorInfo notFoundError(HttpServletRequest req, NoSuchElementException e) {
-        return logAndGetErrorInfo(req, e, false, DATA_NOT_FOUND);
+        return logAndGetErrorInfo(req, e, DATA_NOT_FOUND);
     }
 
-    private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, Exception e, boolean logException, ErrorType errorType, String... details) {
+    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)  // 422
+    @ExceptionHandler(BindException.class)
+    public ErrorInfo bindValidationError(HttpServletRequest req, BindException e) {
+        String[] details = e.getBindingResult().getFieldErrors().stream()
+                .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage()))
+                .toArray(String[]::new);
+        return logAndGetErrorInfo(req, e, VALIDATION_ERROR, details);
+    }
+
+    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)  // 422
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ErrorInfo validationError(HttpServletRequest req, ConstraintViolationException e) {
+        String[] details = e.getConstraintViolations().stream()
+                .map(cv -> String.format("[%s] %s", cv.getPropertyPath(), cv.getMessage()))
+                .toArray(String[]::new);
+        return logAndGetErrorInfo(req, e, VALIDATION_ERROR, details);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ErrorInfo defaultErrorHandler(HttpServletRequest req, Exception e) {
+        return logAndGetErrorInfo(req, e, APP_ERROR);
+    }
+
+    private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, Exception e, ErrorType errorType, String... details) {
         Throwable rootCause = getRootCause(e);
-        if (logException) {
-            log.error(errorType + " at request " + req.getRequestURL(), rootCause);
-        } else {
-            log.warn("{} at request  {}: {}", errorType, req.getRequestURL(), rootCause.toString());
-        }
+        log.warn("{} at request  {}: {}", errorType, req.getRequestURL(), rootCause.toString());
         return new ErrorInfo(req.getRequestURL(), errorType,
                 details.length != 0 ? details : new String[]{rootCause.toString()});
     }
 
-    @NonNull
     private static Throwable getRootCause(@NonNull Throwable t) {
         Throwable rootCause = NestedExceptionUtils.getRootCause(t);
         return rootCause != null ? rootCause : t;

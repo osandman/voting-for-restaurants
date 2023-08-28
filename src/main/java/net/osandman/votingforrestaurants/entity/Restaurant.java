@@ -16,6 +16,7 @@ import java.util.List;
 @Setter
 @ToString(callSuper = true)
 @NoArgsConstructor
+@AllArgsConstructor
 public class Restaurant extends AbstractNamedEntity {
 
     @Column(name = "address", unique = true, nullable = false)
@@ -30,6 +31,11 @@ public class Restaurant extends AbstractNamedEntity {
     private List<Menu> menuList;
 
     public Restaurant(String name, String address) {
+        this(null, name, address);
+    }
+
+    public Restaurant(Integer id, String name, String address) {
+        this.id = id;
         this.name = name;
         this.address = address;
     }

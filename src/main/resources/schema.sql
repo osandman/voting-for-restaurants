@@ -60,7 +60,7 @@ CREATE TABLE menu
     id      INT DEFAULT nextval('global_seq') PRIMARY KEY,
     rest_id INT  NOT NULL,
     date    DATE NOT NULL,
-    FOREIGN KEY (rest_id) REFERENCES restaurant (id),
+    FOREIGN KEY (rest_id) REFERENCES restaurant (id) ON DELETE CASCADE,
     CONSTRAINT rest_id_date_idx UNIQUE (rest_id, date)
 );
 CREATE INDEX menu_date_idx ON menu (date);
@@ -71,7 +71,7 @@ CREATE TABLE menu_item
     menu_id INT NOT NULL,
     dish_id INT NOT NULL,
     price   DECIMAL(6, 2),
-    FOREIGN KEY (menu_id) REFERENCES menu (id),
+    FOREIGN KEY (menu_id) REFERENCES menu (id) ON DELETE CASCADE,
     FOREIGN KEY (dish_id) REFERENCES dish (id),
     CONSTRAINT menu_id_dish_id_idx UNIQUE (menu_id, dish_id)
 );
@@ -83,7 +83,7 @@ CREATE TABLE vote
     menu_id   INT  NOT NULL,
     vote_date DATE NOT NULL,
     FOREIGN KEY (person_id) REFERENCES person (id),
-    FOREIGN KEY (menu_id) REFERENCES menu (id),
+    FOREIGN KEY (menu_id) REFERENCES menu (id) ON DELETE CASCADE,
     CHECK (vote_date = (SELECT date
                         FROM menu
                         WHERE id = menu_id)),

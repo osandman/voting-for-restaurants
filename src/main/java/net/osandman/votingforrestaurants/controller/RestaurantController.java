@@ -6,6 +6,7 @@ import net.osandman.votingforrestaurants.dto.RestaurantTo;
 import net.osandman.votingforrestaurants.entity.Restaurant;
 import net.osandman.votingforrestaurants.repository.RestaurantRepository;
 import net.osandman.votingforrestaurants.util.RestaurantUtil;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -46,5 +48,23 @@ public class RestaurantController {
                 .buildAndExpand(createdRestaurant.getId())
                 .toUri();
         return ResponseEntity.created(uriOfNewRestaurant).body(createdRestaurant);
+    }
+
+    @DeleteMapping("/admin" + RESTAURANT_URL + "/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Integer id) {
+        if (!restaurantRepository.existsById(id)) {
+            throw new NoSuchElementException();
+        }
+        restaurantRepository.deleteById(id);
+    }
+
+    @PutMapping(value = "/admin" + RESTAURANT_URL, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void update(@Valid @RequestBody Restaurant restaurant) {
+        if (!restaurantRepository.existsById(restaurant.getId())) {
+            throw new NoSuchElementException();
+        }
+        restaurantRepository.save(restaurant);
     }
 }

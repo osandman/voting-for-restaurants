@@ -1,15 +1,13 @@
 package net.osandman.votingforrestaurants.entity;
 
-import jakarta.persistence.Access;
-import jakarta.persistence.AccessType;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @MappedSuperclass
-@Access(AccessType.FIELD)
 @Getter
 @Setter
 public abstract class AbstractNamedEntity extends AbstractBaseEntity {

@@ -2,7 +2,9 @@ package net.osandman.votingforrestaurants.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.util.ProxyUtils;
 import org.springframework.lang.Nullable;
@@ -17,7 +19,7 @@ public abstract class AbstractBaseEntity implements Persistable<Integer> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Nullable
-    private Integer id;
+    protected Integer id;
 
     @JsonIgnore
     @Override
