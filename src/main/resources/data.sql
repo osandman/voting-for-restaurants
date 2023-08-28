@@ -37,7 +37,7 @@ VALUES ('Беллини',
        ('Стейк из кенгуру', ''),                                                                                                                                                   -- 100018
        ('Теплый салат «Бурре»', 'aaa'); -- 100019
 
-INSERT INTO menu_item(menu_id, dish_id, price)
+INSERT INTO menu_item(menu_id, dish_id, amount)
 VALUES (100008, 100019, 230.50),
        (100008, 100018, 120.99),
        (100008, 100017, 404.04),

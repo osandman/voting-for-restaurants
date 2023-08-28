@@ -28,7 +28,7 @@ public class Person extends AbstractNamedEntity implements Serializable {
 
     @Column(name = "password", nullable = false)
     @NotBlank
-    @Size(min = 5, max = 20)
+    @Size(min = 5, max = 100)
     private String password;
 
     @Column(name = "registered", nullable = false, columnDefinition = "timestamp default now()", updatable = false)

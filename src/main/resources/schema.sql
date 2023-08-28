@@ -70,7 +70,7 @@ CREATE TABLE menu_item
     id      INT DEFAULT nextval('global_seq') PRIMARY KEY,
     menu_id INT NOT NULL,
     dish_id INT NOT NULL,
-    price   DECIMAL(6, 2),
+    amount   DECIMAL(6, 2) NOT NULL,
     FOREIGN KEY (menu_id) REFERENCES menu (id) ON DELETE CASCADE,
     FOREIGN KEY (dish_id) REFERENCES dish (id),
     CONSTRAINT menu_id_dish_id_idx UNIQUE (menu_id, dish_id)

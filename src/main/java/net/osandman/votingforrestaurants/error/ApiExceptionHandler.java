@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NestedExceptionUtils;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.validation.BindException;
@@ -41,6 +42,16 @@ public class ApiExceptionHandler {
                 .map(cv -> String.format("[%s] %s", cv.getPropertyPath(), cv.getMessage()))
                 .toArray(String[]::new);
         return logAndGetErrorInfo(req, e, VALIDATION_ERROR, details);
+    }
+
+    @ResponseStatus(HttpStatus.CONFLICT)  // 409
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ErrorInfo conflict(HttpServletRequest req, DataIntegrityViolationException e) {
+        String rootMsg = getRootCause(e).getMessage();
+        if (rootMsg != null) {
+            return logAndGetErrorInfo(req, e, VALIDATION_ERROR, rootMsg);
+        }
+        return logAndGetErrorInfo(req, e, DATA_ERROR);
     }
 
     @ExceptionHandler(Exception.class)

@@ -42,7 +42,8 @@ public class RestaurantController {
 
     @PostMapping(value = "/admin" + RESTAURANT_URL, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> create(@Valid @RequestBody RestaurantTo restaurantTo) {
-        Restaurant createdRestaurant = restaurantRepository.save(new Restaurant(restaurantTo.name(), restaurantTo.address()));
+        Restaurant createdRestaurant = restaurantRepository.save(new Restaurant(restaurantTo.name(),
+                restaurantTo.address()));
         URI uriOfNewRestaurant = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(RESTAURANT_URL + "/{id}")
                 .buildAndExpand(createdRestaurant.getId())
@@ -59,12 +60,13 @@ public class RestaurantController {
         restaurantRepository.deleteById(id);
     }
 
-    @PutMapping(value = "/admin" + RESTAURANT_URL, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/admin" + RESTAURANT_URL + "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@Valid @RequestBody Restaurant restaurant) {
-        if (!restaurantRepository.existsById(restaurant.getId())) {
+    public void update(@Valid @RequestBody RestaurantTo restaurantTo, @PathVariable Integer id) {
+        if (!restaurantRepository.existsById(id)) {
             throw new NoSuchElementException();
         }
-        restaurantRepository.save(restaurant);
+        Restaurant updRestaurant = restaurantRepository.save(new Restaurant(id, restaurantTo.name(), restaurantTo.address()));
+        restaurantRepository.save(updRestaurant);
     }
 }

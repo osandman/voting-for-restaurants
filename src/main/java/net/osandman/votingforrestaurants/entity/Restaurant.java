@@ -19,7 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 public class Restaurant extends AbstractNamedEntity {
 
-    @Column(name = "address", unique = true, nullable = false)
+    @Column(name = "address", nullable = false)
     @NotBlank
     @Size(max = 100)
     private String address;
