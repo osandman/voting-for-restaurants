@@ -21,7 +21,7 @@ import java.util.NoSuchElementException;
 @Slf4j
 public class RestaurantController {
 
-    private final String RESTAURANT_URL = "/restaurants";
+    public final static String RESTAURANT_URL = "/restaurants";
     private final RestaurantRepository restaurantRepository;
 
     public RestaurantController(RestaurantRepository restaurantRepository) {

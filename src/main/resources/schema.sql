@@ -82,7 +82,7 @@ CREATE TABLE vote
     person_id INT  NOT NULL,
     menu_id   INT  NOT NULL,
     vote_date DATE NOT NULL,
-    FOREIGN KEY (person_id) REFERENCES person (id),
+    FOREIGN KEY (person_id) REFERENCES person (id) ON DELETE CASCADE,
     FOREIGN KEY (menu_id) REFERENCES menu (id) ON DELETE CASCADE,
     CHECK (vote_date = (SELECT date
                         FROM menu

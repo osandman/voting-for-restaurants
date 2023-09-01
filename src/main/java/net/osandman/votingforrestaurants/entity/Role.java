@@ -1,19 +1,21 @@
 package net.osandman.votingforrestaurants.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "role")
 @Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Role extends AbstractBaseEntity {
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "type", nullable = false)
-    @NotBlank
-    @Size(min = 2, max = 50)
+    @Column(name = "type", unique = true)
     private RoleType type;
 
     @Override

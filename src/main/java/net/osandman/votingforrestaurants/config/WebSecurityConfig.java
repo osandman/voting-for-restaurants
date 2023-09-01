@@ -29,18 +29,20 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Slf4j
 public class WebSecurityConfig {
 
+    public static final PasswordEncoder PASSWORD_ENCODER = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     private final PersonRepository personRepository;
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        return PASSWORD_ENCODER;
     }
 
     @Bean
     public UserDetailsService userDetailsService() {
         return email -> {
-            log.debug("Authenticating '{}'", email);
             Optional<Person> person = personRepository.findPersonByEmailIgnoreCase(email);
+            log.debug("Authenticating '{}'", person);
             return new AuthUser(person.orElseThrow(
                     () -> new UsernameNotFoundException("User '" + email + "' was not found")));
         };
@@ -51,9 +53,10 @@ public class WebSecurityConfig {
         return httpSecurity
                 .authorizeHttpRequests(
                         authorize -> authorize
-                                .requestMatchers("/api/admin/**").hasRole(ADMIN.name())
-                                .requestMatchers("/api/account").hasRole(REGULAR.name())
-                                .requestMatchers("/api/profile").authenticated()
+                                .requestMatchers("/account/register").anonymous()
+                                .requestMatchers("/account").authenticated()
+                                .requestMatchers("/admin/**").hasRole(ADMIN.name())
+                                .requestMatchers("/profile/**").hasAnyRole(ADMIN.name(), REGULAR.name())
                                 .anyRequest().permitAll()
                 )
                 .httpBasic(withDefaults())

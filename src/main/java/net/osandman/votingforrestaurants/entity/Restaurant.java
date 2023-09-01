@@ -16,7 +16,6 @@ import java.util.List;
 @Setter
 @ToString(callSuper = true)
 @NoArgsConstructor
-@AllArgsConstructor
 public class Restaurant extends AbstractNamedEntity {
 
     @Column(name = "address", nullable = false)
