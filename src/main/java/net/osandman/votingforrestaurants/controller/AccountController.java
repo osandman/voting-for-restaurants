@@ -31,6 +31,11 @@ public class AccountController {
         return authUser;
     }
 
+    @GetMapping(value = "/with-votes", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Person getWithVotes(@AuthenticationPrincipal AuthUser authUser) {
+        return personRepository.findPersonByIdWithVotes(authUser.getId()).orElseThrow();
+    }
+
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Person> register(@Valid @RequestBody PersonTo personTo) {
         Role role = roleRepository.queryByType(RoleType.REGULAR).orElse(new Role(RoleType.REGULAR));

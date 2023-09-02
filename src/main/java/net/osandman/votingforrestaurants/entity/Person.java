@@ -1,13 +1,17 @@
 package net.osandman.votingforrestaurants.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.springframework.lang.Nullable;
 import org.springframework.util.ObjectUtils;
 
 import java.io.Serializable;
@@ -49,8 +53,9 @@ public class Person extends AbstractNamedEntity implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    @JsonIgnore
     @OneToMany(mappedBy = "person")
+    @JsonManagedReference
+    @Nullable
     private List<Vote> votes;
 
     public Person(String name, String email, String password, Role... roles) {
