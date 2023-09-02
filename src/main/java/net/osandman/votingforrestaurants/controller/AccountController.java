@@ -27,8 +27,8 @@ public class AccountController {
     private final RoleRepository roleRepository;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public AuthUser getAccount(@AuthenticationPrincipal AuthUser authUser) {
-        return authUser;
+    public Person getAccount(@AuthenticationPrincipal AuthUser authUser) {
+        return authUser.getPerson();
     }
 
     @GetMapping(value = "/with-votes", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -42,12 +42,11 @@ public class AccountController {
         if (role.isNew()) {
             roleRepository.save(role);
         }
-        Person newPerson = new Person(personTo.name(), personTo.email(), personTo.password(), role);
-        Person createdPerson = personRepository.save(newPerson);
+        Person createdPerson = personRepository
+                .save(new Person(personTo.name(), personTo.email(), personTo.password(), role));
         URI uriOfNewPerson = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(ACCOUNT_URL)
-                .build()
-                .toUri();
+                .build().toUri();
         return ResponseEntity.created(uriOfNewPerson).body(createdPerson);
     }
 

@@ -46,8 +46,7 @@ public class RestaurantController {
                 restaurantTo.address()));
         URI uriOfNewRestaurant = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(RESTAURANT_URL + "/{id}")
-                .buildAndExpand(createdRestaurant.getId())
-                .toUri();
+                .build(createdRestaurant.getId());
         return ResponseEntity.created(uriOfNewRestaurant).body(createdRestaurant);
     }
 

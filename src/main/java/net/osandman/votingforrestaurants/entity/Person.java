@@ -16,7 +16,6 @@ import org.springframework.util.ObjectUtils;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -51,7 +50,7 @@ public class Person extends AbstractNamedEntity implements Serializable {
     @JoinTable(name = "person_role",
             joinColumns = @JoinColumn(name = "person_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles = new HashSet<>();
+    private Set<Role> roles;
 
     @OneToMany(mappedBy = "person")
     @JsonManagedReference
