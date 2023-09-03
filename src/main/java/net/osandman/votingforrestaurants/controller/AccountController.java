@@ -19,21 +19,21 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 
 @RestController
-@RequestMapping(AccountController.ACCOUNT_URL)
+@RequestMapping(value = AccountController.ACCOUNT_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
 public class AccountController {
     public final static String ACCOUNT_URL = "/account";
     private final PersonRepository personRepository;
     private final RoleRepository roleRepository;
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping
     public Person getAccount(@AuthenticationPrincipal AuthUser authUser) {
         return authUser.getPerson();
     }
 
-    @GetMapping(value = "/with-votes", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Person getWithVotes(@AuthenticationPrincipal AuthUser authUser) {
-        return personRepository.findPersonByIdWithVotes(authUser.getId()).orElseThrow();
+    @GetMapping("/with-votes")
+    public ResponseEntity<Person> getWithVotes(@AuthenticationPrincipal AuthUser authUser) {
+        return ResponseEntity.of(personRepository.findPersonByIdWithVotes(authUser.getId()));
     }
 
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -51,6 +51,7 @@ public class AccountController {
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody PersonTo personTo, @AuthenticationPrincipal AuthUser authUser) {
+        personRepository.getExisted(authUser.getId());
         Person updPerson = authUser.getPerson();
         updPerson.setName(personTo.name());
         updPerson.setEmail(personTo.email());
@@ -63,6 +64,6 @@ public class AccountController {
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@AuthenticationPrincipal AuthUser authUser) {
-        personRepository.deleteById(authUser.getId());
+        personRepository.deleteExisted(authUser.getId());
     }
 }

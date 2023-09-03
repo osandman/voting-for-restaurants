@@ -21,7 +21,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(AdminAccountController.ADMIN_ACCOUNT_URL)
+@RequestMapping(value = AdminAccountController.ADMIN_ACCOUNT_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
 public class AdminAccountController {
     public final static String ADMIN_ACCOUNT_URL = "/admin/accounts";
@@ -35,15 +35,15 @@ public class AdminAccountController {
 
     @GetMapping("/{id}")
     public Person get(@PathVariable Integer id) {
-        return personRepository.findById(id).orElseThrow();
+        return personRepository.getExisted(id);
     }
 
-    @GetMapping(value = "/{id}/with-votes", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Person getWithVotes(@PathVariable Integer id) {
-        return personRepository.findPersonByIdWithVotes(id).orElseThrow();
+    @GetMapping("/{id}/with-votes")
+    public ResponseEntity<Person> getWithVotes(@PathVariable Integer id) {
+        return ResponseEntity.of(personRepository.findPersonByIdWithVotes(id));
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Person> create(@Valid @RequestBody PersonTo personTo) {
         Set<Role> roles = prepareRoles(personTo);
         Person createdPerson = personRepository.save(
@@ -57,7 +57,7 @@ public class AdminAccountController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Integer id) {
-        personRepository.deleteById(id);
+        personRepository.deleteExisted(id);
     }
 
     private Set<Role> prepareRoles(PersonTo personTo) {

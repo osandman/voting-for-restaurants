@@ -64,7 +64,7 @@ public class Person extends AbstractNamedEntity implements Serializable {
     public Person(Integer id, String name, String email, String password, Role... roles) {
         this.id = id;
         this.name = name;
-        this.email = email;
+        setEmail(email);
         this.password = password;
         this.roles = Set.of(roles);
     }

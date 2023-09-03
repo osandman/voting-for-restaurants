@@ -1,5 +1,6 @@
 package net.osandman.votingforrestaurants.config;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.datatype.hibernate5.jakarta.Hibernate5JakartaModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,8 @@ public class AppConfig {
     public Jackson2ObjectMapperBuilder builder() {
         return new Jackson2ObjectMapperBuilder()
                 .dateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
+//                .serializationInclusion(JsonInclude.Include.NON_EMPTY)
+                .serializationInclusion(JsonInclude.Include.NON_NULL)
                 .modules(new Hibernate5JakartaModule(), new JavaTimeModule());
     }
 }
