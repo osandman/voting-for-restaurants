@@ -38,10 +38,8 @@ public class AccountController {
 
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Person> register(@Valid @RequestBody PersonTo personTo) {
-        Role role = roleRepository.queryByType(RoleType.REGULAR).orElse(new Role(RoleType.REGULAR));
-        if (role.isNew()) {
-            roleRepository.save(role);
-        }
+        Role role = roleRepository.findByType(RoleType.REGULAR)
+                .orElseGet(() -> new Role(RoleType.REGULAR));
         Person createdPerson = personRepository
                 .save(new Person(personTo.name(), personTo.email(), personTo.password(), role));
         URI uriOfNewPerson = ServletUriComponentsBuilder.fromCurrentContextPath()

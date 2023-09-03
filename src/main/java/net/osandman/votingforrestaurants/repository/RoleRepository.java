@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Transactional(readOnly = true)
 public interface RoleRepository extends JpaRepository<Role, Integer> {
-    Optional<Role> queryByType(RoleType type);
+    Optional<Role> findByType(RoleType type);
 }

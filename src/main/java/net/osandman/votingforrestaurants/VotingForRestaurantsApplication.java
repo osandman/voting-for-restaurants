@@ -35,6 +35,6 @@ public class VotingForRestaurantsApplication implements ApplicationRunner {
         menu.getMenuItems().forEach(System.out::println);
 
         Person admin = personRepository.findPersonByEmailIgnoreCase("admin@ya.ru").get();
-        System.out.printf("name=%s, roles=%s\n", admin.getName(), admin.getRoles());
+        System.out.printf("name=%s, roleTypes=%s\n", admin.getName(), admin.getRoles());
     }
 }

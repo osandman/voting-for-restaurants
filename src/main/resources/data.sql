@@ -1,7 +1,7 @@
-INSERT INTO person (name, email, password)
-VALUES ('Игорь Воробьев', 'admin@ya.ru', '{noop}igor123'),         -- 100000
-       ('Виктория Санникова', 'vika@google.com', '{noop}vika123'), -- 100001
-       ('Михаил Гусев', 'misha@yahoo.com', '{noop}misha123'); -- 100002
+INSERT INTO person (name, email, registered, password)
+VALUES ('Игорь Воробьев', 'admin@ya.ru', '2023-01-01 12:01:01', '{noop}igor123'),         -- 100000
+       ('Виктория Санникова', 'vika@google.com', '2023-05-25 11:59:59', '{noop}vika123'), -- 100001
+       ('Михаил Гусев', 'misha@yahoo.com', now(), '{noop}misha123'); -- 100002
 
 INSERT INTO role (type)
 VALUES ('ADMIN'), -- 100003
@@ -34,7 +34,7 @@ VALUES ('Беллини',
        ('Тальята',
         'Классическое итальянское блюдо из тонко нарезанных кусочков мяса (чаще говядины) со специями'),                                                                             -- 100016
        ('Средиземноморский сибас', 'Морская рыба семейства окунеобразных'),                                                                                                          -- 100017
-       ('Стейк из кенгуру', ''),                                                                                                                                                   -- 100018
+       ('Стейк из кенгуру', ''),                                                                                                                                                     -- 100018
        ('Теплый салат «Бурре»', 'aaa'); -- 100019
 
 INSERT INTO menu_item(menu_id, dish_id, amount)

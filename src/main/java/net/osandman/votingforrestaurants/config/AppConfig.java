@@ -25,7 +25,7 @@ public class AppConfig {
     @Bean
     public Jackson2ObjectMapperBuilder builder() {
         return new Jackson2ObjectMapperBuilder()
-                .dateFormat(new SimpleDateFormat("yyyy-MM-dd"))
+                .dateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
                 .modules(new Hibernate5JakartaModule(), new JavaTimeModule());
     }
 }
