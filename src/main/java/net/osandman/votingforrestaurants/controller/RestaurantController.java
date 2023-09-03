@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.osandman.votingforrestaurants.dto.RestaurantTo;
 import net.osandman.votingforrestaurants.entity.Restaurant;
 import net.osandman.votingforrestaurants.repository.RestaurantRepository;
-import net.osandman.votingforrestaurants.util.RestaurantUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,15 +28,15 @@ public class RestaurantController {
     }
 
     @GetMapping(RESTAURANT_URL)
-    public List<RestaurantTo> getAll() {
+    public List<Restaurant> getAll() {
         log.info("getAll");
-        return RestaurantUtil.getTos(restaurantRepository.findAllByOrderByIdAsc());
+        return restaurantRepository.findAllByOrderByIdAsc();
     }
 
     @GetMapping(RESTAURANT_URL + "/{id}")
-    public RestaurantTo getById(@PathVariable Integer id) {
+    public Restaurant getById(@PathVariable Integer id) {
         log.info("getById");
-        return RestaurantUtil.getTo(restaurantRepository.findById(id).orElseThrow());
+        return restaurantRepository.findById(id).orElseThrow();
     }
 
     @PostMapping(value = "/admin" + RESTAURANT_URL, consumes = MediaType.APPLICATION_JSON_VALUE)
