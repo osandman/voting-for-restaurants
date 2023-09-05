@@ -15,6 +15,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
+import static net.osandman.votingforrestaurants.util.ValidationUtil.assureIdConsistent;
+import static net.osandman.votingforrestaurants.util.ValidationUtil.checkNew;
+
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
@@ -63,6 +66,7 @@ public class RestaurantController {
     @PutMapping(value = "/admin" + RESTAURANT_URL + "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody RestaurantTo restaurantTo, @PathVariable Integer id) {
+        assureIdConsistent(restaurantTo, id);
         restaurantRepository.getExisted(id);
         Restaurant updRestaurant = restaurantRepository.save(new Restaurant(id, restaurantTo.name(), restaurantTo.address()));
         restaurantRepository.save(updRestaurant);

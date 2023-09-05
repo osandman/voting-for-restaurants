@@ -1,5 +1,6 @@
 package net.osandman.votingforrestaurants.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -18,6 +19,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "person")
@@ -50,7 +52,12 @@ public class Person extends AbstractNamedEntity implements Serializable {
     @JoinTable(name = "person_role",
             joinColumns = @JoinColumn(name = "person_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JsonIgnore
     private Set<Role> roles;
+
+    public Set<RoleType> getRoleTypes() {
+        return roles.stream().map(Role::getType).collect(Collectors.toSet());
+    }
 
     @OneToMany(mappedBy = "person")
     @JsonManagedReference
@@ -62,8 +69,7 @@ public class Person extends AbstractNamedEntity implements Serializable {
     }
 
     public Person(Integer id, String name, String email, String password, Role... roles) {
-        this.id = id;
-        this.name = name;
+        super(id, name);
         setEmail(email);
         this.password = password;
         this.roles = Set.of(roles);

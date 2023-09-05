@@ -72,7 +72,7 @@ CREATE TABLE menu_item
     dish_id INT NOT NULL,
     amount   DECIMAL(6, 2) NOT NULL,
     FOREIGN KEY (menu_id) REFERENCES menu (id) ON DELETE CASCADE,
-    FOREIGN KEY (dish_id) REFERENCES dish (id),
+    FOREIGN KEY (dish_id) REFERENCES dish (id) ON DELETE CASCADE,
     CONSTRAINT menu_id_dish_id_idx UNIQUE (menu_id, dish_id)
 );
 

@@ -6,13 +6,14 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.lang.Nullable;
 
 @Entity
 @Table(name = "dish")
 @Getter
 @Setter
+@NoArgsConstructor
 public class Dish extends AbstractNamedEntity {
 
     @Column(name = "description", nullable = false)
