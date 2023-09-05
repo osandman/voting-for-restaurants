@@ -22,6 +22,7 @@ public record PersonTo(
         @Size(max = 100)
         String email,
         @Size(max = 100)
+        @Nullable
         @JsonDeserialize(using = JsonDeserializers.PasswordDeserializer.class)
         String password,
         @Nullable

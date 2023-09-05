@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import net.osandman.votingforrestaurants.dto.RestaurantTo;
 import net.osandman.votingforrestaurants.entity.Restaurant;
-import net.osandman.votingforrestaurants.error.NotFoundException;
 import net.osandman.votingforrestaurants.repository.RestaurantRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,7 +15,6 @@ import java.net.URI;
 import java.util.List;
 
 import static net.osandman.votingforrestaurants.util.ValidationUtil.assureIdConsistent;
-import static net.osandman.votingforrestaurants.util.ValidationUtil.checkNew;
 
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -37,13 +35,13 @@ public class RestaurantController {
     }
 
     @GetMapping(RESTAURANT_URL + "/{id}")
-    public Restaurant getById(@PathVariable Integer id) {
+    public Restaurant getById(@PathVariable int id) {
         log.info("getById");
         return restaurantRepository.getExisted(id);
     }
 
     @GetMapping(RESTAURANT_URL + "/{id}/with-menu")
-    public ResponseEntity<Restaurant> getWithMenu(@PathVariable Integer id) {
+    public ResponseEntity<Restaurant> getWithMenu(@PathVariable int id) {
         return ResponseEntity.of(restaurantRepository.findRestaurantWithMenu(id));
     }
 
@@ -59,16 +57,14 @@ public class RestaurantController {
 
     @DeleteMapping("/admin" + RESTAURANT_URL + "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Integer id) {
+    public void delete(@PathVariable int id) {
         restaurantRepository.deleteExisted(id);
     }
 
     @PutMapping(value = "/admin" + RESTAURANT_URL + "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@Valid @RequestBody RestaurantTo restaurantTo, @PathVariable Integer id) {
+    public void update(@Valid @RequestBody RestaurantTo restaurantTo, @PathVariable int id) {
         assureIdConsistent(restaurantTo, id);
-        restaurantRepository.getExisted(id);
-        Restaurant updRestaurant = restaurantRepository.save(new Restaurant(id, restaurantTo.name(), restaurantTo.address()));
-        restaurantRepository.save(updRestaurant);
+        restaurantRepository.save(new Restaurant(id, restaurantTo.name(), restaurantTo.address()));
     }
 }

@@ -43,6 +43,7 @@ public class Person extends AbstractNamedEntity implements Serializable {
 
     @Column(name = "registered", nullable = false, columnDefinition = "timestamp default now()", updatable = false)
     @NotNull
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date registered = new Date();
 
     @Column(name = "enabled", nullable = false, columnDefinition = "boolean default true")
@@ -64,15 +65,15 @@ public class Person extends AbstractNamedEntity implements Serializable {
     @Nullable
     private List<Vote> votes;
 
-    public Person(String name, String email, String password, Role... roles) {
+    public Person(String name, String email, String password, Set<Role> roles) {
         this(null, name, email, password, roles);
     }
 
-    public Person(Integer id, String name, String email, String password, Role... roles) {
+    public Person(Integer id, String name, String email, String password, Set<Role> roles) {
         super(id, name);
         setEmail(email);
         this.password = password;
-        this.roles = Set.of(roles);
+        this.roles = roles;
     }
 
     public void setEmail(String email) {

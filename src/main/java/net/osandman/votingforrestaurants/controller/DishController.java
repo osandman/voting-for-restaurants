@@ -29,7 +29,7 @@ public class DishController {
     }
 
     @GetMapping(DISH_URL + "/{id}")
-    public Dish get(@PathVariable Integer id) {
+    public Dish get(@PathVariable int id) {
         return dishRepository.getExisted(id);
     }
 
@@ -45,14 +45,14 @@ public class DishController {
 
     @PutMapping(value = "/admin" + DISH_URL + "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@Valid @RequestBody Dish dish, @PathVariable Integer id) {
+    public void update(@Valid @RequestBody Dish dish, @PathVariable int id) {
         assureIdConsistent(dish, id);
         dishRepository.save(dish);
     }
 
     @DeleteMapping("/admin" + DISH_URL + "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Integer id) {
+    public void delete(@PathVariable int id) {
         dishRepository.deleteExisted(id);
     }
 }

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = AccountController.ACCOUNT_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -41,7 +42,7 @@ public class AccountController {
         Role role = roleRepository.findByType(RoleType.REGULAR)
                 .orElseGet(() -> new Role(RoleType.REGULAR));
         Person createdPerson = personRepository
-                .save(new Person(personTo.name(), personTo.email(), personTo.password(), role));
+                .save(new Person(personTo.name(), personTo.email(), personTo.password(), Set.of(role)));
         URI uriOfNewPerson = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(ACCOUNT_URL)
                 .build().toUri();
@@ -51,7 +52,6 @@ public class AccountController {
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody PersonTo personTo, @AuthenticationPrincipal AuthUser authUser) {
-        personRepository.getExisted(authUser.getId());
         Person updPerson = authUser.getPerson();
         updPerson.setName(personTo.name());
         updPerson.setEmail(personTo.email());
