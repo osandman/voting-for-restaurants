@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -16,13 +17,14 @@ import java.util.List;
 @Table(name = "menu")
 @Getter
 @Setter
+@NoArgsConstructor
 public class Menu extends AbstractBaseEntity {
 
     @Column(name = "date")
     @NotNull
     private LocalDate date;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "rest_id", nullable = false)
     @JsonBackReference
     private Restaurant restaurant;
@@ -32,10 +34,15 @@ public class Menu extends AbstractBaseEntity {
     @JsonManagedReference
     private List<Vote> votes;
 
-    @OneToMany(mappedBy = "menu")
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<MenuItem> menuItems;
+
+    public Menu(LocalDate date, List<MenuItem> menuItems) {
+        super(null);
+        this.date = date;
+        this.menuItems = menuItems;
+    }
 
     @Override
     public String toString() {

@@ -1,8 +1,10 @@
 package net.osandman.votingforrestaurants.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
@@ -11,11 +13,13 @@ import java.math.BigDecimal;
 @Table(name = "menu_item")
 @Getter
 @Setter
+@NoArgsConstructor
 public class MenuItem extends AbstractBaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "menu_id")
     @NotNull
+    @JsonBackReference
     private Menu menu;
 
     @ManyToOne
@@ -26,6 +30,11 @@ public class MenuItem extends AbstractBaseEntity {
     @Column(name = "amount")
     @NotNull
     private BigDecimal amount;
+
+    public MenuItem(Dish dish, BigDecimal amount) {
+        this.dish = dish;
+        this.amount = amount;
+    }
 
     @Override
     public String toString() {
