@@ -35,6 +35,9 @@ public interface MenuRepository extends BaseRepository<Menu> {
             """)
     List<Menu> findAllByRestaurantBetweenWithMenuItems(int restaurantId, LocalDate startDate, LocalDate endDate);
 
+    @Query("SELECT m FROM Menu m JOIN FETCH m.restaurant WHERE m.id=?1")
+    Optional<Menu> findMenuByIdWithRestaurant(int id);
+
     default Menu findWithItems(int id) {
         return findMenuByIdWithMenuItems(id)
                 .orElseThrow(() -> new NotFoundException("Entity with id=" + id + " not found"));

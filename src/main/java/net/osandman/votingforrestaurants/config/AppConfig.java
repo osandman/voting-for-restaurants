@@ -27,8 +27,8 @@ public class AppConfig {
     public Jackson2ObjectMapperBuilder builder() {
         return new Jackson2ObjectMapperBuilder()
                 .dateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
-                .serializationInclusion(JsonInclude.Include.NON_EMPTY)
-//                .serializationInclusion(JsonInclude.Include.NON_NULL)
+//                .serializationInclusion(JsonInclude.Include.NON_EMPTY)
+                .serializationInclusion(JsonInclude.Include.NON_NULL)
                 .modules(new Hibernate5JakartaModule(), new JavaTimeModule());
     }
 }
