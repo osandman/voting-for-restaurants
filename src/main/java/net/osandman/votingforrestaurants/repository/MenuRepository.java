@@ -5,6 +5,7 @@ import net.osandman.votingforrestaurants.error.NotFoundException;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +21,19 @@ public interface MenuRepository extends BaseRepository<Menu> {
 
     @Query("SELECT m FROM Menu m JOIN FETCH m.menuItems WHERE m.restaurant.id = :restaurantId")
     List<Menu> findAllWithItemsByRestaurantId(int restaurantId);
+
+    @Query("""
+            SELECT m FROM Menu m JOIN FETCH m.menuItems
+            WHERE m.date >= :startDate AND m.date <= :endDate
+            ORDER BY m.date DESC
+            """)
+    List<Menu> findAllBetweenWithMenuItems(LocalDate startDate, LocalDate endDate);
+    @Query("""
+            SELECT m FROM Menu m JOIN FETCH m.menuItems
+            WHERE m.restaurant.id = :restaurantId AND m.date >= :startDate AND m.date <= :endDate
+            ORDER BY m.date DESC
+            """)
+    List<Menu> findAllByRestaurantBetweenWithMenuItems(int restaurantId, LocalDate startDate, LocalDate endDate);
 
     default Menu findWithItems(int id) {
         return findMenuByIdWithMenuItems(id)

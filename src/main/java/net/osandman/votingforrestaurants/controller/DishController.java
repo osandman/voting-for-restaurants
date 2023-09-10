@@ -47,7 +47,8 @@ public class DishController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody Dish dish, @PathVariable int id) {
         assureIdConsistent(dish, id);
-        dishRepository.save(dish);
+        Dish updDish = dishRepository.getExisted(id).update(dish);
+        dishRepository.save(updDish);
     }
 
     @DeleteMapping("/admin" + DISH_URL + "/{id}")

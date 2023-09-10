@@ -3,6 +3,7 @@ package net.osandman.votingforrestaurants.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,6 +30,7 @@ public class MenuItem extends AbstractBaseEntity {
 
     @Column(name = "amount")
     @NotNull
+    @PositiveOrZero
     private BigDecimal amount;
 
     public MenuItem(Dish dish, BigDecimal amount) {

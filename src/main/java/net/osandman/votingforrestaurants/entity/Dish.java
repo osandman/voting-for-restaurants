@@ -27,4 +27,10 @@ public class Dish extends AbstractNamedEntity {
                 ", name=" + super.name +
                 ", descr=" + description;
     }
+
+    public Dish update(Dish updated) {
+        this.name = updated.name;
+        this.description = updated.description;
+        return this;
+    }
 }

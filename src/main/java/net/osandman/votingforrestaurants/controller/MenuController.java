@@ -10,9 +10,11 @@ import net.osandman.votingforrestaurants.entity.Restaurant;
 import net.osandman.votingforrestaurants.repository.DishRepository;
 import net.osandman.votingforrestaurants.repository.MenuRepository;
 import net.osandman.votingforrestaurants.repository.RestaurantRepository;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -22,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static net.osandman.votingforrestaurants.util.DateUtil.endDayOrMax;
+import static net.osandman.votingforrestaurants.util.DateUtil.startDayOrMin;
 import static net.osandman.votingforrestaurants.util.ValidationUtil.assureIdConsistent;
 import static net.osandman.votingforrestaurants.util.ValidationUtil.checkNew;
 
@@ -60,6 +64,20 @@ public class MenuController {
     @GetMapping(MENU_URL)
     public List<Menu> getAll() {
         return menuRepository.findAll();
+    }
+
+    @GetMapping(MENU_URL + "/filter")
+    public List<Menu> getAllBetween(@RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                                    @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        return menuRepository.findAllBetweenWithMenuItems(startDayOrMin(startDate), endDayOrMax(endDate));
+    }
+
+    @GetMapping(RESTAURANT_MENU_URL + "/filter")
+    public List<Menu> getAllByRestaurantBetween(@PathVariable int restaurantId,
+                                                @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                                                @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        return menuRepository.findAllByRestaurantBetweenWithMenuItems(restaurantId,
+                startDayOrMin(startDate), endDayOrMax(endDate));
     }
 
     @PostMapping(value = "/admin" + RESTAURANT_MENU_URL, consumes = MediaType.APPLICATION_JSON_VALUE)

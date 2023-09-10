@@ -21,13 +21,11 @@ import static net.osandman.votingforrestaurants.error.ErrorType.*;
 @Slf4j
 public class ApiExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND) // 404
-    @ExceptionHandler(NoSuchElementException.class)
     public ErrorInfo notFoundError(HttpServletRequest req, NoSuchElementException e) {
         return logAndGetErrorInfo(req, e, DATA_NOT_FOUND);
     }
 
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)  // 422
-    @ExceptionHandler(BindException.class)
     public ErrorInfo bindValidationError(HttpServletRequest req, BindException e) {
         String[] details = e.getBindingResult().getFieldErrors().stream()
                 .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage()))
@@ -36,7 +34,6 @@ public class ApiExceptionHandler {
     }
 
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)  // 422
-    @ExceptionHandler(ConstraintViolationException.class)
     public ErrorInfo validationError(HttpServletRequest req, ConstraintViolationException e) {
         String[] details = e.getConstraintViolations().stream()
                 .map(cv -> String.format("[%s] %s", cv.getPropertyPath(), cv.getMessage()))
@@ -45,7 +42,6 @@ public class ApiExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)  // 409
-    @ExceptionHandler(DataIntegrityViolationException.class)
     public ErrorInfo conflict(HttpServletRequest req, DataIntegrityViolationException e) {
         String rootMsg = getRootCause(e).getMessage();
         if (rootMsg != null) {
@@ -56,10 +52,20 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ErrorInfo defaultErrorHandler(HttpServletRequest req, Exception e) {
+        e = (Exception) getRootCause(e);
+        if (e instanceof DataIntegrityViolationException exception) {
+            return conflict(req, exception);
+        } else if (e instanceof ConstraintViolationException exception) {
+            return validationError(req, exception);
+        } else if (e instanceof BindException exception) {
+            return bindValidationError(req, exception);
+        } else if (e instanceof NoSuchElementException exception) {
+            return notFoundError(req, exception);
+        }
         return logAndGetErrorInfo(req, e, APP_ERROR);
     }
 
-    private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, Exception e, ErrorType errorType, String... details) {
+    private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, Throwable e, ErrorType errorType, String... details) {
         Throwable rootCause = getRootCause(e);
         log.warn("{} at request  {}: {}", errorType, req.getRequestURL(), rootCause.toString());
         return new ErrorInfo(req.getRequestURL(), errorType,

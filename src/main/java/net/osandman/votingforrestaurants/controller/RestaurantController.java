@@ -65,6 +65,9 @@ public class RestaurantController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody RestaurantTo restaurantTo, @PathVariable int id) {
         assureIdConsistent(restaurantTo, id);
-        restaurantRepository.save(new Restaurant(id, restaurantTo.name(), restaurantTo.address()));
+        Restaurant updRestaurant = restaurantRepository.getExisted(id);
+        updRestaurant.setName(restaurantTo.name());
+        updRestaurant.setAddress(restaurantTo.address());
+        restaurantRepository.save(updRestaurant);
     }
 }
