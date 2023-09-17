@@ -5,6 +5,7 @@ import com.fasterxml.jackson.datatype.hibernate5.jakarta.Hibernate5JakartaModule
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
 import org.h2.tools.Server;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
@@ -13,6 +14,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 
 @Configuration
+@EnableCaching
 @Slf4j
 public class AppConfig {
 

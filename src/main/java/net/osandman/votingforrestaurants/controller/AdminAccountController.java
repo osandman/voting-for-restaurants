@@ -26,7 +26,7 @@ import static net.osandman.votingforrestaurants.util.ValidationUtil.assureIdCons
 @RequestMapping(value = AdminAccountController.ADMIN_ACCOUNT_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
 public class AdminAccountController {
-    public final static String ADMIN_ACCOUNT_URL = "/admin/accounts";
+    public static final String ADMIN_ACCOUNT_URL = "/admin/accounts";
     private final PersonRepository personRepository;
     private final RoleRepository roleRepository;
 

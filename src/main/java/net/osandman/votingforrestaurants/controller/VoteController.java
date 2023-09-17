@@ -18,7 +18,7 @@ import java.util.List;
 @RequestMapping(value = VoteController.VOTE_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
 public class VoteController {
-    public final static String VOTE_URL = "/profile/votes";
+    public static final String VOTE_URL = "/profile/votes";
     private final VoteRepository voteRepository;
 
     @GetMapping("/{id}")

@@ -21,7 +21,7 @@ import static net.osandman.votingforrestaurants.util.ValidationUtil.assureIdCons
 @Slf4j
 public class RestaurantController {
 
-    public final static String RESTAURANT_URL = "/restaurants";
+    public static final String RESTAURANT_URL = "/restaurants";
     private final RestaurantRepository restaurantRepository;
 
     public RestaurantController(RestaurantRepository restaurantRepository) {

@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import net.osandman.votingforrestaurants.entity.Dish;
 import net.osandman.votingforrestaurants.repository.DishRepository;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ import static net.osandman.votingforrestaurants.util.ValidationUtil.checkNew;
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
 public class DishController {
-    public final static String DISH_URL = "/dishes";
+    public static final String DISH_URL = "/dishes";
     private final DishRepository dishRepository;
 
     @GetMapping(DISH_URL)

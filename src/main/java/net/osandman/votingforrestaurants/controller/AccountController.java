@@ -23,7 +23,7 @@ import java.util.Set;
 @RequestMapping(value = AccountController.ACCOUNT_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
 public class AccountController {
-    public final static String ACCOUNT_URL = "/account";
+    public static final String ACCOUNT_URL = "/account";
     private final PersonRepository personRepository;
     private final RoleRepository roleRepository;
 
