@@ -3,7 +3,6 @@ package net.osandman.votingforrestaurants.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
@@ -12,7 +11,6 @@ import java.time.LocalDate;
 @Table(name = "vote")
 @Getter
 @Setter
-@NoArgsConstructor
 public class Vote extends AbstractBaseEntity {
 
     @ManyToOne
@@ -27,6 +25,16 @@ public class Vote extends AbstractBaseEntity {
 
     @Column(name = "vote_date")
     private LocalDate voteDate;
+
+    public Vote() {
+        this.voteDate = LocalDate.now();
+    }
+
+    public Vote(Menu menu, Person person) {
+        this();
+        this.menu = menu;
+        this.person = person;
+    }
 
     @Override
     public String toString() {
