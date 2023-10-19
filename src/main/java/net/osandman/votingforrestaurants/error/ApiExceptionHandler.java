@@ -25,7 +25,7 @@ public class ApiExceptionHandler {
         return logAndGetErrorInfo(req, e, DATA_NOT_FOUND);
     }
 
-    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)  // 422
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)  // 422
     public ErrorInfo bindValidationError(HttpServletRequest req, BindException e) {
         String[] details = e.getBindingResult().getFieldErrors().stream()
                 .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage()))
@@ -33,7 +33,7 @@ public class ApiExceptionHandler {
         return logAndGetErrorInfo(req, e, VALIDATION_ERROR, details);
     }
 
-    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)  // 422
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)  // 422
     public ErrorInfo validationError(HttpServletRequest req, ConstraintViolationException e) {
         String[] details = e.getConstraintViolations().stream()
                 .map(cv -> String.format("[%s] %s", cv.getPropertyPath(), cv.getMessage()))
@@ -65,6 +65,7 @@ public class ApiExceptionHandler {
         return logAndGetErrorInfo(req, e, APP_ERROR);
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, Throwable e, ErrorType errorType, String... details) {
         Throwable rootCause = getRootCause(e);
         log.warn("{} at request  {}: {}", errorType, req.getRequestURL(), rootCause.toString());

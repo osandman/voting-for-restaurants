@@ -31,7 +31,7 @@ spring:
     #https://marco.dev/spring-boot-h2-error
   h2.console.enabled: false
   cache:
-    cache-names: dishes, restaurants
+    cache-names: dishes, allDishes, restaurants
     caffeine.spec: maximumSize=5000,expireAfterAccess=60s
 
 logging.level:

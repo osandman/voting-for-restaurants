@@ -4,14 +4,16 @@ import net.osandman.votingforrestaurants.entity.Dish;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.lang.NonNull;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Transactional(readOnly = true)
 public interface DishRepository extends BaseRepository<Dish> {
-    @Cacheable("dishes")
+    @Cacheable("allDishes")
     List<Dish> findAllByOrderById();
 
     @Override
@@ -23,11 +25,16 @@ public interface DishRepository extends BaseRepository<Dish> {
     @Override
     @Modifying
     @Transactional
+    @NonNull
     @CachePut(value = "dishes", key = "#dish.id")
-    Dish save(Dish dish);
+    @CacheEvict(value = "allDishes", allEntries = true)
+    Dish save(@NonNull Dish dish);
 
     @Override
-    @CacheEvict(value = "dishes", allEntries = true)
+    @Caching(evict = {
+            @CacheEvict(value = "dishes", key = "#id"),
+            @CacheEvict(value = "allDishes", allEntries = true)
+    })
     default void deleteExisted(int id) {
         BaseRepository.super.deleteExisted(id);
     }

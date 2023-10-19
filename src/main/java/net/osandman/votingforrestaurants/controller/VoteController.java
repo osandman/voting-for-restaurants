@@ -7,6 +7,7 @@ import net.osandman.votingforrestaurants.dto.VoteTo;
 import net.osandman.votingforrestaurants.entity.Menu;
 import net.osandman.votingforrestaurants.entity.Vote;
 import net.osandman.votingforrestaurants.error.NotFoundException;
+import net.osandman.votingforrestaurants.error.TimeIsOverException;
 import net.osandman.votingforrestaurants.repository.MenuRepository;
 import net.osandman.votingforrestaurants.repository.VoteRepository;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -22,6 +24,7 @@ import java.util.List;
 @AllArgsConstructor
 public class VoteController {
     public static final String VOTE_URL = "/profile/votes";
+    public static final LocalTime BOUNDARY_OF_TIME = LocalTime.of(11, 00);
     private final VoteRepository voteRepository;
     private final MenuRepository menuRepository;
 
@@ -43,6 +46,7 @@ public class VoteController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
     public VoteTo create(@AuthenticationPrincipal AuthUser authUser,
                          @RequestParam("restaurantId") @NotNull int restaurantId) {
         Menu menu = menuRepository.findMenuByRestaurantId(restaurantId)
@@ -52,13 +56,16 @@ public class VoteController {
         return new VoteTo(vote.id(), menu.getRestaurant().getId(), vote.getVoteDate());
     }
 
+
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@AuthenticationPrincipal AuthUser authUser) {
-        Vote vote = voteRepository.findByIdCurrentDay(authUser.getId())
-                .orElseThrow(() -> new NotFoundException("Not found vote for current day"));
-        if (LocalTime.now().isBefore(LocalTime.of(11, 0))) {
-            voteRepository.delete(vote.id());
+        if (LocalTime.now().isBefore(BOUNDARY_OF_TIME)) {
+            if (voteRepository.deleteByUserIdAndVoteDate(authUser.getId(), LocalDate.now()) == 0) {
+                throw new NotFoundException("Not found vote for current day");
+            }
+        } else {
+            throw new TimeIsOverException("Can't delete vote, the time is over than " + BOUNDARY_OF_TIME);
         }
     }
 }
