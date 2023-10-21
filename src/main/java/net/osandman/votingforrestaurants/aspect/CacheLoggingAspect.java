@@ -22,7 +22,8 @@ public class CacheLoggingAspect {
         this.cacheManager = cacheManager;
     }
 
-    @Pointcut("execution(* net.osandman.votingforrestaurants.controller.DishController.*(..))")
+    @Pointcut("within(net.osandman.votingforrestaurants.controller.DishController) || " +
+            "within(net.osandman.votingforrestaurants.controller.RestaurantController)")
     public void controllerMethods() {
     }
 
@@ -32,15 +33,15 @@ public class CacheLoggingAspect {
         for (String cacheName : cacheNames) {
             log.info("Cache: " + cacheName);
             CaffeineCache caffeineCache = (CaffeineCache) cacheManager.getCache(cacheName);
-            Cache<Object, Object> nativeCache;
             if (caffeineCache != null) {
-                nativeCache = caffeineCache.getNativeCache();
-                printCacheKeys(nativeCache);
+                loggingCacheKeys(caffeineCache.getNativeCache());
+            } else {
+                log.warn("Can't get native cache");
             }
         }
     }
 
-    private static void printCacheKeys(Cache<Object, Object> nativeCache) {
+    private static void loggingCacheKeys(Cache<Object, Object> nativeCache) {
         log.info("Has keys: " + String.join(", ", nativeCache.asMap().values()
                 .stream().map(key -> {
                     if (key instanceof List<?>) {

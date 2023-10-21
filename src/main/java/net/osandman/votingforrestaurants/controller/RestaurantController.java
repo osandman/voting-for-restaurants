@@ -31,7 +31,7 @@ public class RestaurantController {
     @GetMapping(RESTAURANT_URL)
     public List<Restaurant> getAll() {
         log.info("getAll");
-        return restaurantRepository.findAllByOrderByIdAsc();
+        return restaurantRepository.findAll();
     }
 
     @GetMapping(RESTAURANT_URL + "/{id}")

@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import net.osandman.votingforrestaurants.entity.Dish;
 import net.osandman.votingforrestaurants.repository.DishRepository;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +25,7 @@ public class DishController {
 
     @GetMapping(DISH_URL)
     public List<Dish> getAll() {
-        return dishRepository.findAllByOrderById();
+        return dishRepository.findAll();
     }
 
     @GetMapping(DISH_URL + "/{id}")

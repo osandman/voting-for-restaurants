@@ -13,8 +13,10 @@ import java.util.List;
 
 @Transactional(readOnly = true)
 public interface DishRepository extends BaseRepository<Dish> {
+    @Override
     @Cacheable("allDishes")
-    List<Dish> findAllByOrderById();
+    @NonNull
+    List<Dish> findAll();
 
     @Override
     @Cacheable("dishes")
