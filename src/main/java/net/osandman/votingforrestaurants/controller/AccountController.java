@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -32,12 +33,8 @@ public class AccountController {
         return authUser.getPerson();
     }
 
-    @GetMapping("/with-votes")
-    public ResponseEntity<Person> getWithVotes(@AuthenticationPrincipal AuthUser authUser) {
-        return ResponseEntity.of(personRepository.findPersonByIdWithVotes(authUser.getId()));
-    }
-
-    @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Person> register(@Valid @RequestBody PersonTo personTo) {
         Role role = roleRepository.findByType(RoleType.REGULAR)
                 .orElseGet(() -> new Role(RoleType.REGULAR));

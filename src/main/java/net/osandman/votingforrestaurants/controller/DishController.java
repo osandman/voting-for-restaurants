@@ -7,6 +7,7 @@ import net.osandman.votingforrestaurants.repository.DishRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -33,6 +34,7 @@ public class DishController {
         return dishRepository.getExisted(id);
     }
 
+    @Transactional
     @PostMapping(value = "/admin" + DISH_URL, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Dish> create(@Valid @RequestBody Dish dish) {
         checkNew(dish);
@@ -43,6 +45,7 @@ public class DishController {
         return ResponseEntity.created(uriOfNewDish).body(createdDish);
     }
 
+    @Transactional
     @PutMapping(value = "/admin" + DISH_URL + "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody Dish dish, @PathVariable int id) {

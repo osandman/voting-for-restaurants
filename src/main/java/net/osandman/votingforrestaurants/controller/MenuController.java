@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -80,6 +81,7 @@ public class MenuController {
                 startDayOrMin(startDate), endDayOrMax(endDate));
     }
 
+    @Transactional
     @PostMapping(value = "/admin" + RESTAURANT_MENU_URL, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Menu> createWithItems(@Valid @RequestBody MenuTo menuTo, @PathVariable int restaurantId) {
         checkNew(menuTo);
@@ -99,6 +101,7 @@ public class MenuController {
         return ResponseEntity.created(uriOfNewRestaurant).body(createdMenu);
     }
 
+    @Transactional
     @PutMapping(value = "/admin" + RESTAURANT_MENU_URL + "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody MenuTo menuTo, @PathVariable int restaurantId, @PathVariable int id) {
@@ -120,6 +123,7 @@ public class MenuController {
         menuRepository.save(updMenu);
     }
 
+    @Transactional
     @DeleteMapping("/admin" + RESTAURANT_MENU_URL + "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int restaurantId, @PathVariable int id) {

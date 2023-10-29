@@ -8,6 +8,7 @@ import net.osandman.votingforrestaurants.repository.RestaurantRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -45,6 +46,7 @@ public class RestaurantController {
         return ResponseEntity.of(restaurantRepository.findRestaurantWithMenu(id));
     }
 
+    @Transactional
     @PostMapping(value = "/admin" + RESTAURANT_URL, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> create(@Valid @RequestBody RestaurantTo restaurantTo) {
         Restaurant createdRestaurant = restaurantRepository.save(new Restaurant(restaurantTo.name(),
@@ -61,6 +63,7 @@ public class RestaurantController {
         restaurantRepository.deleteExisted(id);
     }
 
+    @Transactional
     @PutMapping(value = "/admin" + RESTAURANT_URL + "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody RestaurantTo restaurantTo, @PathVariable int id) {

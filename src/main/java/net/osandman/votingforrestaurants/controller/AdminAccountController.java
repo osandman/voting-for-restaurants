@@ -12,6 +12,7 @@ import net.osandman.votingforrestaurants.repository.RoleRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -40,11 +41,7 @@ public class AdminAccountController {
         return personRepository.getExisted(id);
     }
 
-    @GetMapping("/{id}/with-votes")
-    public ResponseEntity<Person> getWithVotes(@PathVariable int id) {
-        return ResponseEntity.of(personRepository.findPersonByIdWithVotes(id));
-    }
-
+    @Transactional
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Person> create(@Valid @RequestBody PersonTo personTo) {
         Set<Role> roles = prepareRoles(personTo, true);
@@ -62,6 +59,7 @@ public class AdminAccountController {
         personRepository.deleteExisted(id);
     }
 
+    @Transactional
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody PersonTo personTo, @PathVariable int id) {
@@ -76,6 +74,7 @@ public class AdminAccountController {
         personRepository.save(updPerson);
     }
 
+    @Transactional
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void setEnabled(@PathVariable int id, @RequestParam boolean enable) {

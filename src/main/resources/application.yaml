@@ -23,6 +23,7 @@ logging.level:
   root: warn
   net.osandman.votingforrestaurants: debug
   org.springframework.security.web.FilterChainProxy: debug
+  org.springframework.transaction: trace
 
 server.servlet:
   context-path: /api

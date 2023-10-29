@@ -17,7 +17,7 @@ import java.util.List;
 @Table(name = "restaurant")
 @Getter
 @Setter
-@ToString(callSuper = true)
+@ToString(callSuper = true, exclude = "menuList")
 @NoArgsConstructor
 public class Restaurant extends AbstractNamedEntity {
 

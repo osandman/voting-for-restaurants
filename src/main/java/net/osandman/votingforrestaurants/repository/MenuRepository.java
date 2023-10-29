@@ -35,8 +35,7 @@ public interface MenuRepository extends BaseRepository<Menu> {
             """)
     List<Menu> findAllByRestaurantBetweenWithMenuItems(int restaurantId, LocalDate startDate, LocalDate endDate);
 
-    @Query("SELECT m FROM Menu m WHERE m.restaurant.id=?1")
-    Optional<Menu> findMenuByRestaurantId(int restaurantId);
+    Optional<Menu> findMenuByRestaurantIdAndDate(int restaurantId, LocalDate date);
 
     default Menu findWithItems(int id) {
         return findMenuByIdWithMenuItems(id)
