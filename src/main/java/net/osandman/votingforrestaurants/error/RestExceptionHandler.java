@@ -23,6 +23,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.nio.file.AccessDeniedException;
@@ -49,6 +50,7 @@ public class RestExceptionHandler {
             put(BindException.class, VALIDATION_ERROR);
             put(ValidationException.class, VALIDATION_ERROR);
             put(IllegalRequestDataException.class, DATA_CONFLICT);
+            put(MethodArgumentTypeMismatchException.class, BAD_REQUEST);
             put(HttpRequestMethodNotSupportedException.class, BAD_REQUEST);
             put(MissingServletRequestParameterException.class, BAD_REQUEST);
             put(RequestRejectedException.class, BAD_REQUEST);

@@ -17,13 +17,13 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class MenuItem extends AbstractBaseEntity {
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_id")
     @NotNull
     @JsonBackReference
     private Menu menu;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "dish_id")
     @NotNull
     private Dish dish;

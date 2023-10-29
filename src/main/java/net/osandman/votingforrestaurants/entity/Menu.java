@@ -7,10 +7,12 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.osandman.votingforrestaurants.error.NotFoundException;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -24,7 +26,7 @@ public class Menu extends AbstractBaseEntity {
     @NotNull
     private LocalDate date;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rest_id", nullable = false)
     @JsonBackReference
     private Restaurant restaurant;
@@ -36,12 +38,25 @@ public class Menu extends AbstractBaseEntity {
 
     @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<MenuItem> menuItems;
+    private List<MenuItem> menuItems = new ArrayList<>();
 
     public Menu(LocalDate date, List<MenuItem> menuItems) {
         super(null);
         this.date = date;
         this.menuItems = menuItems;
+    }
+
+    public void addItem(MenuItem item) {
+        menuItems.add(item);
+        item.setMenu(this);
+    }
+
+    public void removeItem(Integer id) {
+        MenuItem menuItem = menuItems.stream()
+                .filter(item -> item.id().equals(id))
+                .findAny()
+                .orElseThrow(() -> new NotFoundException("Item with id=" + id + "not found"));
+        menuItems.remove(menuItem);
     }
 
     @Override

@@ -41,11 +41,6 @@ public class RestaurantController {
         return restaurantRepository.getExisted(id);
     }
 
-    @GetMapping(RESTAURANT_URL + "/{id}/with-menu")
-    public ResponseEntity<Restaurant> getWithMenu(@PathVariable int id) {
-        return ResponseEntity.of(restaurantRepository.findRestaurantWithMenu(id));
-    }
-
     @Transactional
     @PostMapping(value = "/admin" + RESTAURANT_URL, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> create(@Valid @RequestBody RestaurantTo restaurantTo) {

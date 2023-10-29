@@ -14,7 +14,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
-import static net.osandman.votingforrestaurants.util.ValidationUtil.assureIdConsistent;
 import static net.osandman.votingforrestaurants.util.ValidationUtil.checkNew;
 
 @RestController
@@ -43,15 +42,6 @@ public class DishController {
                 .path(DISH_URL + "/{id}")
                 .build(createdDish.getId());
         return ResponseEntity.created(uriOfNewDish).body(createdDish);
-    }
-
-    @Transactional
-    @PutMapping(value = "/admin" + DISH_URL + "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@Valid @RequestBody Dish dish, @PathVariable int id) {
-        assureIdConsistent(dish, id);
-        Dish updDish = dishRepository.getExisted(id).update(dish);
-        dishRepository.save(updDish);
     }
 
     @DeleteMapping("/admin" + DISH_URL + "/{id}")

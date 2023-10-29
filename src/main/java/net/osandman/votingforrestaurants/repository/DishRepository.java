@@ -18,6 +18,8 @@ public interface DishRepository extends BaseRepository<Dish> {
     @NonNull
     List<Dish> findAll();
 
+    List<Dish> findAllByIdIn(List<Integer> ids);
+
     @Override
     @Cacheable("dishes")
     default Dish getExisted(int id) {

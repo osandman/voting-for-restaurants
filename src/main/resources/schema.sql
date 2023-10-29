@@ -45,7 +45,6 @@ CREATE TABLE restaurant
     address VARCHAR(100) NOT NULL,
     CONSTRAINT name_address UNIQUE (name, address)
 );
-CREATE INDEX restaurant_name_idx ON restaurant (name);
 
 CREATE TABLE dish
 (

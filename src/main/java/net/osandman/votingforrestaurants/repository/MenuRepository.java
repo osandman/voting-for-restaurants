@@ -14,6 +14,8 @@ public interface MenuRepository extends BaseRepository<Menu> {
     @Query("SELECT m FROM Menu m JOIN FETCH m.menuItems WHERE m.id=?1")
     Optional<Menu> findMenuByIdWithMenuItems(int id);
 
+    Optional<Menu> findMenuById(Integer id);
+
     List<Menu> findAllByRestaurantId(int restaurantId);
 
     @Query("SELECT m FROM Menu m JOIN FETCH m.votes WHERE m.restaurant.id = :restaurantId")
@@ -39,6 +41,6 @@ public interface MenuRepository extends BaseRepository<Menu> {
 
     default Menu findWithItems(int id) {
         return findMenuByIdWithMenuItems(id)
-                .orElseThrow(() -> new NotFoundException("Entity with id=" + id + " not found"));
+                .orElseThrow(() -> new  NotFoundException("Not found items from menu with id=" + id));
     }
 }

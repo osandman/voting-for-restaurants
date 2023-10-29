@@ -4,9 +4,12 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import net.osandman.votingforrestaurants.dto.MenuItemTo;
 import net.osandman.votingforrestaurants.dto.MenuTo;
+import net.osandman.votingforrestaurants.entity.Dish;
 import net.osandman.votingforrestaurants.entity.Menu;
 import net.osandman.votingforrestaurants.entity.MenuItem;
 import net.osandman.votingforrestaurants.entity.Restaurant;
+import net.osandman.votingforrestaurants.error.IllegalRequestDataException;
+import net.osandman.votingforrestaurants.error.NotFoundException;
 import net.osandman.votingforrestaurants.repository.DishRepository;
 import net.osandman.votingforrestaurants.repository.MenuRepository;
 import net.osandman.votingforrestaurants.repository.RestaurantRepository;
@@ -23,7 +26,10 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static net.osandman.votingforrestaurants.util.DateUtil.endDayOrMax;
 import static net.osandman.votingforrestaurants.util.DateUtil.startDayOrMin;
@@ -45,15 +51,12 @@ public class MenuController {
         return menuRepository.findAllByRestaurantId(restaurantId);
     }
 
-    @GetMapping(RESTAURANT_MENU_URL + "/with-votes")
-    public List<Menu> getAllWithVotesByRestaurantId(@PathVariable int restaurantId) {
-        return menuRepository.findAllWithVotesByRestaurantId(restaurantId);
-    }
-
     @GetMapping(RESTAURANT_MENU_URL + "/{id}")
-    public Menu getWithVotesByRestaurantId(@PathVariable int restaurantId, @PathVariable int id) {
+    public Menu getWithItemsByMenuId(@PathVariable int restaurantId, @PathVariable int id) {
         Menu menu = menuRepository.findWithItems(id);
-        assureIdConsistent(menu.getRestaurant(), restaurantId);
+        if (!Objects.requireNonNull(menu.getRestaurant().getId()).equals(restaurantId)) {
+            throw new NotFoundException("Restaurant must has id=" + restaurantId);
+        }
         return menu;
     }
 
@@ -62,18 +65,16 @@ public class MenuController {
         return menuRepository.findAllWithItemsByRestaurantId(restaurantId);
     }
 
-    @GetMapping(MENU_URL)
-    public List<Menu> getAll() {
-        return menuRepository.findAll();
-    }
-
     @GetMapping(MENU_URL + "/filter")
-    public List<Menu> getAllBetween(@RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-                                    @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-        return menuRepository.findAllBetweenWithMenuItems(startDayOrMin(startDate), endDayOrMax(endDate));
+    public Map<Map<String, Integer>, List<Menu>> getAllBetween(@RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                                                               @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        List<Menu> allBetweenWithMenuItems = menuRepository.findAllBetweenWithMenuItems(startDayOrMin(startDate), endDayOrMax(endDate));
+        return allBetweenWithMenuItems.stream()
+                .collect(Collectors.groupingBy(menu ->
+                        Map.of("restaurantId", Objects.requireNonNull(menu.getRestaurant().getId()))));
     }
 
-    @GetMapping(RESTAURANT_MENU_URL + "/filter")
+    @GetMapping(RESTAURANT_MENU_URL + "/with-items/filter")
     public List<Menu> getAllByRestaurantBetween(@PathVariable int restaurantId,
                                                 @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
                                                 @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
@@ -85,14 +86,16 @@ public class MenuController {
     @PostMapping(value = "/admin" + RESTAURANT_MENU_URL, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Menu> createWithItems(@Valid @RequestBody MenuTo menuTo, @PathVariable int restaurantId) {
         checkNew(menuTo);
+        if (Objects.requireNonNull(menuTo.date()).isBefore(LocalDate.now())) {
+            throw new IllegalRequestDataException("Date must be before current day");
+        }
         List<MenuItem> menuItems = new ArrayList<>();
-        Menu createdMenu = new Menu(LocalDate.now(), menuItems);
+        Menu createdMenu = new Menu(menuTo.date(), menuItems);
         Restaurant restaurant = restaurantRepository.getExisted(restaurantId);
         createdMenu.setRestaurant(restaurant);
         for (MenuItemTo itemTo : Objects.requireNonNull(menuTo.menuItems())) {
-            MenuItem item = new MenuItem(dishRepository.getExisted(itemTo.id()), itemTo.amount());
-            item.setMenu(createdMenu);
-            menuItems.add(item);
+            MenuItem item = new MenuItem(dishRepository.getExisted(itemTo.dishId()), itemTo.amount());
+            createdMenu.addItem(item);
         }
         menuRepository.save(createdMenu);
         URI uriOfNewRestaurant = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -105,22 +108,36 @@ public class MenuController {
     @PutMapping(value = "/admin" + RESTAURANT_MENU_URL + "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody MenuTo menuTo, @PathVariable int restaurantId, @PathVariable int id) {
-        Menu updMenu = menuRepository.findWithItems(id);
-        assureIdConsistent(updMenu.getRestaurant(), restaurantId);
-        for (MenuItemTo itemTo : Objects.requireNonNull(menuTo.menuItems())) {
-            int dishId = itemTo.id();
+        Menu updMenu = menuRepository.findMenuByIdWithMenuItems(id).orElse(menuRepository.getExisted(id));
+        if (updMenu == null || menuTo.menuItems() == null) {
+            return;
+        }
+        if (!Objects.requireNonNull(updMenu.getRestaurant().getId()).equals(restaurantId)) {
+            throw new NotFoundException("Restaurant must has id=" + restaurantId);
+        }
+        List<Integer> dishIds = menuTo.menuItems().stream().map(MenuItemTo::dishId).toList();
+        Map<Integer, Dish> dishes = dishRepository.findAllByIdIn(dishIds).stream()
+                .collect(Collectors.toMap(Dish::getId, Function.identity()));
+        updateMenu(menuTo, updMenu, dishes);
+        menuRepository.save(updMenu);
+    }
+
+    private static void updateMenu(MenuTo menuTo, Menu updMenu, Map<Integer, Dish> dishes) {
+        List<MenuItem> updatedItems = new ArrayList<>();
+        for (MenuItemTo itemTo : menuTo.menuItems()) {
+            int dishId = itemTo.dishId();
             MenuItem updItem = updMenu.getMenuItems().stream()
                     .filter(item -> item.getDish().id().equals(dishId))
                     .findAny()
-                    .orElse(new MenuItem(dishRepository.getExisted(itemTo.id()), itemTo.amount()));
+                    .orElse(new MenuItem(dishes.get(dishId), itemTo.amount()));
+            updatedItems.add(updItem);
             if (updItem.isNew()) {
-                updMenu.getMenuItems().add(updItem);
-                updItem.setMenu(updMenu);
+                updMenu.addItem(updItem);
             } else {
                 updItem.setAmount(itemTo.amount());
             }
         }
-        menuRepository.save(updMenu);
+        updMenu.getMenuItems().retainAll(updatedItems);
     }
 
     @Transactional

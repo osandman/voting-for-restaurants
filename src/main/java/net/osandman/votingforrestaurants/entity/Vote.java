@@ -13,12 +13,12 @@ import java.time.LocalDate;
 @Setter
 public class Vote extends AbstractBaseEntity {
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_id", nullable = false)
     @JsonBackReference
     private Menu menu;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "person_id")
     @JsonBackReference
     private Person person;

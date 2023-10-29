@@ -13,6 +13,7 @@ public class JsonDeserializers {
 
     // https://stackoverflow.com/a/60995048/548473
     public static class PasswordDeserializer extends JsonDeserializer<String> {
+        @Override
         public String deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
             ObjectCodec oc = jsonParser.getCodec();
             JsonNode node = oc.readTree(jsonParser);

@@ -19,7 +19,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "person")
@@ -55,10 +54,6 @@ public class Person extends AbstractNamedEntity implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     @JsonIgnore
     private Set<Role> roles;
-
-    public Set<RoleType> getRoleTypes() {
-        return roles.stream().map(Role::getType).collect(Collectors.toSet());
-    }
 
     @OneToMany(mappedBy = "person")
     @JsonManagedReference

@@ -14,6 +14,7 @@ import net.osandman.votingforrestaurants.repository.RestaurantRepository;
 import net.osandman.votingforrestaurants.repository.VoteRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -34,9 +35,10 @@ public class VoteController {
 
     @GetMapping("/{id}")
     public VoteTo getById(@PathVariable int id, @AuthenticationPrincipal AuthUser authUser) {
-        Vote vote = voteRepository.getExisted(id);
+        Vote vote = voteRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Vote with id=" + id + " not found"));
         if (vote.getPerson().getId() != null && !vote.getPerson().getId().equals(authUser.getId())) {
-            throw new NotFoundException("Vote with id=" + id + " not found");
+            throw new AccessDeniedException("User denied");
         }
         return new VoteTo(vote.id(), vote.getMenu().getRestaurant().getId(), vote.getVoteDate());
     }

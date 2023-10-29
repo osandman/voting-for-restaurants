@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.osandman.votingforrestaurants.dto.AuthUser;
 import net.osandman.votingforrestaurants.entity.Person;
-import net.osandman.votingforrestaurants.entity.RoleType;
 import net.osandman.votingforrestaurants.repository.PersonRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +19,6 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 import static net.osandman.votingforrestaurants.entity.RoleType.ADMIN;
