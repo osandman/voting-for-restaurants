@@ -52,7 +52,7 @@ public class VoteController {
     }
 
     @Transactional
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public VoteTo create(@AuthenticationPrincipal AuthUser authUser,
                          @RequestParam("restaurantId") @NotNull int restaurantId) {
@@ -66,15 +66,19 @@ public class VoteController {
     }
 
     @Transactional
-    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@AuthenticationPrincipal AuthUser authUser,
                        @RequestParam("restaurantId") @NotNull int restaurantId) {
-        Restaurant restaurant = restaurantRepository.getExisted(restaurantId);
+        Restaurant restaurant = restaurantRepository.findRestaurantWithMenu(restaurantId)
+                .orElseThrow(() -> new NotFoundException("Restaurant with id=" + restaurantId + "not found"));
         Vote vote = voteRepository.findByPersonIdAndVoteDate(authUser.getId(), LocalDate.now())
                 .orElseThrow(() -> new NotFoundException("Vote for current day not found"));
         if (LocalTime.now().isBefore(BOUNDARY_OF_TIME)) {
-            vote.getMenu().setRestaurant(restaurant);
+            vote.setMenu(restaurant.getMenuList().stream()
+                    .filter(menu -> menu.getDate().isEqual(LocalDate.now()))
+                    .findAny()
+                    .orElseThrow());
             voteRepository.save(vote);
         } else {
             throw new TimeIsOverException("Can't update vote, the time is over than " + BOUNDARY_OF_TIME);

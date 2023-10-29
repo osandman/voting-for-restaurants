@@ -236,7 +236,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"New account1\",\r\n    \"email\": \"New@YAHOO.com1\",\r\n    \"password\": \"12345\",\r\n    \"roleTypes\": [\r\n        \"GUEST\",\r\n        \"ADMIN\",\r\n        \"REGULAR\"\r\n    ]\r\n}",
+									"raw": "{\r\n    \"name\": \"New account1\",\r\n    \"email\": \"New@YAHOO.com1\",\r\n    \"password\": \"12345\",\r\n    \"roleTypes\": [\r\n        \"ADMIN\",\r\n        \"REGULAR\"\r\n    ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -422,53 +422,6 @@
 					"response": []
 				},
 				{
-					"name": "with votes",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "basic",
-							"basic": [
-								{
-									"key": "password",
-									"value": "igor123",
-									"type": "string"
-								},
-								{
-									"key": "username",
-									"value": "admin@ya.ru",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{root}}/account/with-votes",
-							"host": [
-								"{{root}}"
-							],
-							"path": [
-								"account",
-								"with-votes"
-							]
-						},
-						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
-					},
-					"response": []
-				},
-				{
 					"name": "delete",
 					"event": [
 						{
@@ -541,13 +494,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{root}}/account/register",
+							"raw": "{{root}}/account",
 							"host": [
 								"{{root}}"
 							],
 							"path": [
-								"account",
-								"register"
+								"account"
 							]
 						},
 						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
@@ -654,31 +606,6 @@
 					"response": []
 				},
 				{
-					"name": "by id with menu",
-					"protocolProfileBehavior": {
-						"disabledSystemHeaders": {}
-					},
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{root}}/restaurants/100005/with-menu",
-							"host": [
-								"{{root}}"
-							],
-							"path": [
-								"restaurants",
-								"100005",
-								"with-menu"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "by id not found",
 					"event": [
 						{
@@ -750,7 +677,7 @@
 					"response": []
 				},
 				{
-					"name": "by id Copy",
+					"name": "update",
 					"protocolProfileBehavior": {
 						"disabledSystemHeaders": {}
 					},
@@ -920,49 +847,6 @@
 					"response": []
 				},
 				{
-					"name": "update",
-					"request": {
-						"auth": {
-							"type": "basic",
-							"basic": [
-								{
-									"key": "password",
-									"value": "igor123",
-									"type": "string"
-								},
-								{
-									"key": "username",
-									"value": "admin@ya.ru",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"id\": 100015,\r\n    \"name\": \"Редактированное блюдо\",\r\n    \"description\": \"\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{root}}/admin/dishes/100015",
-							"host": [
-								"{{root}}"
-							],
-							"path": [
-								"admin",
-								"dishes",
-								"100015"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "delete",
 					"request": {
 						"auth": {
@@ -1021,12 +905,12 @@
 					"response": []
 				},
 				{
-					"name": "all by rest with votes",
+					"name": "all by rest bad param",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{root}}/restaurant/100005/menus/with-votes",
+							"raw": "{{root}}/restaurant/100005/menus/wer",
 							"host": [
 								"{{root}}"
 							],
@@ -1034,7 +918,7 @@
 								"restaurant",
 								"100005",
 								"menus",
-								"with-votes"
+								"wer"
 							]
 						}
 					},
@@ -1061,7 +945,7 @@
 					"response": []
 				},
 				{
-					"name": "by id with items",
+					"name": "by rest by id with items",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1081,29 +965,12 @@
 					"response": []
 				},
 				{
-					"name": "all",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{root}}/menus",
-							"host": [
-								"{{root}}"
-							],
-							"path": [
-								"menus"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "all between",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{root}}/menus/filter?startDate=2023-08-01&endDate=2023-08-01",
+							"raw": "{{root}}/menus/filter?startDate=2023-08-01&endDate=2023-10-01",
 							"host": [
 								"{{root}}"
 							],
@@ -1118,7 +985,7 @@
 								},
 								{
 									"key": "endDate",
-									"value": "2023-08-01"
+									"value": "2023-10-01"
 								}
 							]
 						}
@@ -1126,7 +993,7 @@
 					"response": []
 				},
 				{
-					"name": "all between by rest",
+					"name": "all by rest between",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1177,7 +1044,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"menuItems\": [\r\n        {\r\n            \"dishId\": 100012,\r\n            \"amount\": 20.20\r\n        },\r\n        {\r\n            \"dishId\": 100015,\r\n            \"amount\": 10.10\r\n        }\r\n    ]\r\n}",
+							"raw": "{\r\n    \"date\": \"2023-10-31\",\r\n    \"menuItems\": [\r\n        {\r\n            \"dishId\": 100014,\r\n            \"amount\": 20.20\r\n        },\r\n        {\r\n            \"dishId\": 100015,\r\n            \"amount\": 10.10\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1221,7 +1088,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"menuItems\": [\r\n        {\r\n            \"dishId\": 100013,\r\n            \"amount\": 55.55\r\n        },\r\n        {\r\n            \"dishId\": 100015,\r\n            \"amount\": 99.99\r\n        },\r\n        {\r\n            \"dishId\": 100016,\r\n            \"amount\": 99.99\r\n        }\r\n    ]\r\n}",
+							"raw": "{\r\n    \"menuItems\": [\r\n        {\r\n            \"dishId\": 100013,\r\n            \"amount\": 55.55\r\n        },\r\n        {\r\n            \"dishId\": 100015,\r\n            \"amount\": 99.88\r\n        },\r\n        {\r\n            \"dishId\": 100016,\r\n            \"amount\": 99.99\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1339,14 +1206,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{root}}/profile/votes/100028",
+							"raw": "{{root}}/profile/votes/100031",
 							"host": [
 								"{{root}}"
 							],
 							"path": [
 								"profile",
 								"votes",
-								"100028"
+								"100031"
 							]
 						}
 					},
@@ -1360,12 +1227,12 @@
 							"basic": [
 								{
 									"key": "password",
-									"value": "igor123",
+									"value": "misha123",
 									"type": "string"
 								},
 								{
 									"key": "username",
-									"value": "admin@ya.ru",
+									"value": "misha@yahoo.com",
 									"type": "string"
 								}
 							]
@@ -1394,6 +1261,54 @@
 								{
 									"key": "restaurantId",
 									"value": "100007"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "misha123",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "misha@yahoo.com",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Новый ресторан2\",\r\n    \"address\": \"Мира ул., д.1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{root}}/profile/votes?restaurantId=100005",
+							"host": [
+								"{{root}}"
+							],
+							"path": [
+								"profile",
+								"votes"
+							],
+							"query": [
+								{
+									"key": "restaurantId",
+									"value": "100005"
 								}
 							]
 						}
